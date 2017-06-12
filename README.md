@@ -5,7 +5,7 @@ Nagios plugins for Zevenet Load Balancer
 # INSTALLATION
 
 1. Install dependencies
-========================
+=======================
 
 Debian Jessie:
 
@@ -13,7 +13,7 @@ apt-get update && apt-get install libwww-curl-perl libjson-perl libnagios-plugin
 
 
 2. Decompress Zevenet Nagios plugins pack
-==========================================
+=========================================
 
 tar xvzf zevenet-nagios-plugins.tar.gz
 
