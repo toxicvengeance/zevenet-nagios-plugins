@@ -1,6 +1,14 @@
 # Zevenet Nagios Plugins
 
-Nagios plugin pack to monitor Zevenet ADC Load Balancer system health and performance.
+Nagios plugin collection to monitor Zevenet ADC Load Balancer system health and performance.
+
+The plugins are also compatible with Icinga, Naemon, Shinken, Sensu, and other monitoring applications.
+
+Nagios (https://www.nagios.org) is a enterprise-class Open Source IT monitoring, network monitoring, server and applications monitoring.  
+
+Plugins provide performace data, so yo can use PNP4Nagios (https://docs.pnp4nagios.org/) or similar tool to make graphs from 
+collected metrics.
+
 
 ## INSTALLATION
 
