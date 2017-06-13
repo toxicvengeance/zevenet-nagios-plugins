@@ -228,7 +228,7 @@ my $load_15_min_critical_theshold = $critical_thesholds_array[2];
 $p->add_perfdata( 
   label => "Load 1 min",
   value => $load_1_min,
-  uom => "Avg."
+  uom => "Avg.",
   warning   => $load_1_min_warning_theshold,
   critical  => $load_1_min_critical_theshold,
 );
@@ -236,7 +236,7 @@ $p->add_perfdata(
 $p->add_perfdata( 
   label => "Load 5 min",
   value => $load_5_min,
-  uom => "Avg."
+  uom => "Avg.",
   warning   => $load_5_min_warning_theshold,
   critical  => $load_5_min_critical_theshold,
 );
@@ -244,7 +244,7 @@ $p->add_perfdata(
 $p->add_perfdata( 
   label => "Load 15 min",
   value => $load_15_min,
-  uom => "Avg."
+  uom => "Avg.",
   warning   => $load_15_min_warning_theshold,
   critical  => $load_15_min_critical_theshold,
 );
