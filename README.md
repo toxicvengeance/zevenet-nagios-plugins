@@ -78,9 +78,25 @@ ZEVENET_CPU CRITICAL - Zevenet ADC Load Balancer CPU usage is 40 % (Idle 60 %) |
 
 ### 6. Add commands definition to Nagios configuration
 
-See example file etc\zevenet_commands.cfg
+See Nagios command definitions example file in etc/zevenet_commands.cfg.
 
+You can add the command definitions to your Nagios configuration:
+
+```
+cd etc
+cat zevenet_commands.cfg >>/usr/local/nagios/etc/objects/commands.cfg
+```
 
 ### 7. Add services to Nagios configuration
 
-See example file etc\zavenet_services.cfg
+See Nagios service definitions example file in etc/zevenet_services.cfg
+
+Make sure you replace the string <zapi_v3_key> with the Zevenet API v3 key string you generate in step 4.
+
+You can also tune the tresholds to suit your needs. See more information in 'Threshold and ranges' section at https://nagios-plugins.org/doc/guidelines.html.
+
+
+### 8. Restart Nagios and have fun!
+
+Restart Nagios process and access Nagios web interface to see the services you have just created.
+ 
