@@ -3,14 +3,16 @@
 Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer system health and performance.
 
 
-| Plugin                             | Description       | Performance data                                                 |
-| ---------------------------------- | ----------------- | -----------------------------------------------------------------|
-| check_zevenet_cpu.pl               | CPU usage         | Idle, iowait, irq, nice, softirq, system, usage, user and total  |
-| check_zevenet_farm.pl              | Farm status       | Established and pending connections                              | 
-| check_zevenet_interface.pl         | Interface status  | Traffic in and out                                               |            
-| check_zevenet_memory.pl            | Memory usage      | Free, buffers, cached, used and total                            |
-| check_zevenet_swap.pl              | Swap usage        | Free, cached, used and total                                     |
-| check_zevenet_total_connections.pl | Total connections | Total connections                                                |
+
+| Plugin                             | Check             | Provided performance data                                                  |
+| ---------------------------------- | ----------------- | ---------------------------------------------------------------------------|
+| check_zevenet_cpu.pl               | CPU usage         | Idle, iowait, irq, nice, softirq, system, usage, user and total CPU usage  |
+| check_zevenet_farm.pl              | Farm status       | Established and pending connections                                        | 
+| check_zevenet_interface.pl         | Interface status  | Traffic in and out                                                         |            
+| check_zevenet_memory.pl            | Memory usage      | Free, buffers, cached, used and total                                      |
+| check_zevenet_swap.pl              | Swap usage        | Free, cached, used and total                                               |
+| check_zevenet_total_connections.pl | Total connections | Total connections                                                          |
+
 
 The plugins are also compatible with Icinga, Naemon, Shinken, Sensu, and other monitoring applications.
 
