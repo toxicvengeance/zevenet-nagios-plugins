@@ -1,6 +1,16 @@
 # Zevenet Nagios Plugins
 
-Nagios plugin collection to monitor Zevenet ADC Load Balancer system health and performance.
+Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer system health and performance.
+
+
+| Plugin                             | Description       | Performance data                                                 |
+| ---------------------------------- | ----------------- | -----------------------------------------------------------------|
+| check_zevenet_cpu.pl               | CPU usage         | Idle, iowait, irq, nice, softirq, system, usage, user and total  |
+| check_zevenet_farm.pl              | Farm status       | Established and pending connections                              | 
+| check_zevenet_interface.pl         | Interface status  | Traffic in and out                                               |            
+| check_zevenet_memory.pl            | Memory usage      | Free, buffers, cached, used and total                            |
+| check_zevenet_swap.pl              | Swap usage        | Free, cached, used and total                                     |
+| check_zevenet_total_connections.pl | Total connections | Total connections                                                |
 
 The plugins are also compatible with Icinga, Naemon, Shinken, Sensu, and other monitoring applications.
 
@@ -14,26 +24,42 @@ collected metrics.
 
 ### 1. Install dependencies
 
+Install required perl modules:
+
 #### Debian Jessie:
 
 ```
 apt-get update && apt-get install libwww-curl-perl libjson-perl libnagios-plugin-perl
 ```
 
+If Perl modules doesn't exist in your distribution package manager, you can install manually:
+
+#### Other distributions:
+
+```
+perl -MCPAN -e 'install WWW::Curl'
+perl -MCPAN -e 'install JSON'
+perl -MCPAN -e 'install Nagios::Plugin'  
+```
+
+
 ### 2. Decompress Zevenet Nagios plugins pack
 
 ```
-tar xvzf zevenet-nagios-plugins.tar.gz
+wget https://github.com/zevenet/zevenet-nagios-plugins/archive/master.zip 
+unzip master.zip
 ```
 
-### 3. Copy all check scripts to /usr/local/nagios/libexec/
+### 3. Copy check scripts to /usr/local/nagios/libexec/
 
 ```
-cd xvzf zevenet-nagios-plugins
-cp check_zevenet_* /usr/local/nagios/libexec/
+cd zevenet-nagios-plugins
+cp libexec/* /usr/local/nagios/libexec/
 ```
 
 ### 4. Create a valid ZAPI v3 key thought Zevenet ADC Load Balancer web interface
+
+Login into Zevenet web interface and go to System > Users > Edit zapi user > Generate random key, we'll use this key as a authentication method to retrieve the metrics from Zevenet ADC Load Balancer appliance.  Finally make sure zapi user is active.
 
 
 ### 5. Test plugin manually
