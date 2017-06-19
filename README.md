@@ -1,6 +1,6 @@
 # Zevenet Nagios Plugins
 
-Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer system health and performance.
+Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer Enterprise Edition system health and performance.
 
 
 
