@@ -24,6 +24,9 @@ collected metrics.
 
 ## INSTALLATION
 
+Zevenet Nagios Plugins are developed to be installed in your Nagios (Or Nagios plugin's compatible) monitoring server. So please access via SSH to
+your monitoring host as root to install the required software.
+
 ### 1. Install dependencies
 
 Install required perl modules:
