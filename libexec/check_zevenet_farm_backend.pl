@@ -21,21 +21,18 @@
 #
 #    --------------------------------------------------------------------------
 #
-#    check_zevenet_load.pl
+#    check_zevenet_farm_backend.pl
 #
 #    --------------------------------------------------------------------------
 #
-#    Check load averages of a Zevenet ADC Load Balancer appliance. Zevenet API 
-#    v3 (https://www.zevenet.com/zapidocv3/) is used to retrieve the metrics
-#    from Zevenet ADC Load Balancer appliance. Provides performance data.
+#    Check status of a backend server in a Zevenet ADC Load Balancer appliance 
+#    farm. Zevenet API v3 (https://www.zevenet.com/zapidocv3/) is used to 
+#    retrieve the metrics from Zevenet ADC Load Balancer appliance. Provides 
+#    performance data.
 # 
 #    --------------------------------------------------------------------------
 #
-#    Returns CRITICAL if 1/5/15 minutes average load are greater than CRITICAL 
-#    tresholds.
-#
-#    Returns WARNING if 1/5/15 minutes average load are below CRITICAL and 
-#    greater than WARNING tresholds.
+#    Returns CRITICAL if farm is not in up state.
 #
 #    --------------------------------------------------------------------------
 #
@@ -73,10 +70,11 @@ $PROGNAME = basename($0);
 my $p = Nagios::Plugin->new(
     usage => "Usage: %s [ -v|--verbose ]  [-H <host>] [-t <timeout>]
 	[ -z|--zapikey=<Zevenet API v3 ZAPI_KEY> ]
-	[ -w|--warning=<WLOAD1>,<WLOAD5>,<WLOAD15> ]
-    [ -c|--critical=<CLOAD1>,<CLOAD5>,<CLOAD15> ]",
+    [ -f|--farm=<farm_name> ]
+    [ -s|--service=<service_name> ]
+    [ -b|--backend=<backend_id> ]",		
     version => $VERSION,
-    blurb => 'Check load of a Zevenet ADC Load Balancer appliance.', 
+    blurb => 'Check farm status of a Zevenet ADC Load Balancer appliance.', 
 	extra => ""
 );
 
@@ -102,22 +100,49 @@ qq{-zapikey, --z=STRING
 	required => 1,
 );
 
-# WARNING thresholds
+# FARM name
 $p->add_arg(
-	spec => 'warning|w=s',
+	spec => 'farm|f=s',
 	help => 
-qq{-w, --warning=INTEGER,INTEGER,INTEGER
-   Warning thesholds for 1, 5 and 15 min load averages.},
+qq{-f, --farm=STRING
+   Farm name.},
 	required => 1,
-#	default => 10,
 );
 
-# CRITICAL thresholds
+# Service ID
+$p->add_arg(
+	spec => 'serviceid|s=s',
+	help => 
+qq{-s, --serviceid=STRING
+   Service ID.},
+	#required => 1,
+);
+
+# Backend ID
+$p->add_arg(
+	spec => 'backendid|b=s',
+	help => 
+qq{-b, --backendid=STRING
+   Backend ID.},
+	required => 1,
+);
+
+# WARNING threshold
+$p->add_arg(
+	spec => 'warning|w=s',
+	help => qq{-w, --warning=INTEGER:INTEGER
+	# Minimum and maximum number of tracked connections, outside of
+	# which a warning will be generated.},
+	required => 1,
+);
+
+# CRITICAL threshold
 $p->add_arg(
 	spec => 'critical|c=s',
-	help => 
-qq{-w, --critical=INTEGER,INTEGER,INTEGER
-   Critical thesholds for 1, 5 and 15 min load averages.},
+	help => qq{-c, --critical=INTEGER:INTEGER
+	# Minimum and maximum number of tracked connections, outside of
+	# which a critical will be generated.. },
+	required => 1,
 );
 
 # Timeout value
@@ -133,8 +158,8 @@ qq{-t, --timeout=INTEGER
 $p->getopts;
 
 # Perform sanity check on command line options
-unless ( defined $p->opts->warning || defined $p->opts->critical ) {
-	$p->nagios_die( " You didn't supply a threshold argument " );
+unless ( defined $p->opts->farm ) {
+	$p->nagios_die( " You didn't supply a farm name " );
 }
 
 
@@ -145,10 +170,13 @@ unless ( defined $p->opts->warning || defined $p->opts->critical ) {
 #  Don't forget to timeout after $p->opts->timeout seconds, if applicable.
 
 my $host = $p->opts->host;
+my $farmname = $p->opts->farm;
+my $serviceid = $p->opts->serviceid;
+my $backendid = $p->opts->backendid;
 my $port = 444;
 
-# https://www.zevenet.com/zapidocv3/#show-load-statistics
-my $url = "/zapi/v3/zapi.cgi/stats/system/load";
+# https://www.zevenet.com/zapidocv3/#show-farms-statistics
+my $url = "/zapi/v3/zapi.cgi/stats/farms/$farmname";
 
 my $zapikey = $p->opts->zapikey;
 
@@ -156,7 +184,7 @@ my $zapikey = $p->opts->zapikey;
 my $response_body;
 my $retcode;
 my $response_code;
-my $response_decoded;
+my $response_decoded = "";
 my $curl = WWW::Curl::Easy->new;
 $curl->setopt(CURLOPT_HEADER,0);
 $curl->setopt(CURLOPT_SSL_VERIFYPEER, 0);
@@ -184,19 +212,31 @@ $response_code = $curl->getinfo(CURLINFO_HTTP_CODE);
 
 #print("$response_body\n");
 
-# Example response body
+# Example response body:
 #
 # {
-#    "description" : "System load",
-#    "params" : {
-#       "Last_1" : 0.66,
-#       "Last_15" : 0.39,
-#       "Last_5" : 0.49,
-#       "date" : "Fri Jan 27 13:15:01 2017",
-#       "hostname" : "api3"
-#    }
+#    "backends" : [
+#       {
+#          "established" : 0,
+#          "id" : 0,
+#          "ip" : "192.168.0.168",
+#          "pending" : 0,
+#          "port" : 80,
+#          "service" : "srv1",
+#          "status" : "up"
+#       }
+#    ],
+#    "description" : "List farm stats",
+#    "sessions" : [
+#       {
+#          "client" : "0",
+#          "id" : "0",
+#          "service" : "srv1",
+#          "session" : "192.168.0.186"
+#       }
+#    ]
 # }
-
+#
 
 $response_decoded = decode_json($response_body);
 
@@ -214,49 +254,54 @@ if (defined $response_decoded->{'message'}) {
 	}
 }
 
-my $load_1_min = $response_decoded->{'params'}->{'Last_1'};
-my $load_5_min = $response_decoded->{'params'}->{'Last_5'};
-my $load_15_min = $response_decoded->{'params'}->{'Last_15'};
+my $backend_found = 0;
+my $backend_ip = "";
+my $backend_status = "";
+my $backend_established = "";
+my $backend_pending = "";
 
+my $backends = $response_decoded->{'backends'};
 
-my $warning_thesholds = $p->opts->warning;
-my @warning_thesholds_array = split(/,/, $warning_thesholds);
-my $load_1_min_warning_theshold = $warning_thesholds_array[0];
-my $load_5_min_warning_theshold = $warning_thesholds_array[1];
-my $load_15_min_warning_theshold = $warning_thesholds_array[2];
+foreach my $backend (@$backends) {
+	#print "Farm: " . $farm->{'farmname'} . "\n";
+	if ($backend->{'id'} eq $p->opts->backendid ) {
+		$backend_found = 1;
+		$backend_ip = $backend->{'ip'};
+		$backend_status = $backend->{'status'};
+		$backend_established = $backend->{'established'};
+		$backend_pending = $backend->{'pending'};
+	}
+}
 
-my $critical_thesholds = $p->opts->critical;
-my @critical_thesholds_array = split(/,/, $critical_thesholds);
-my $load_1_min_critical_theshold = $critical_thesholds_array[0];
-my $load_5_min_critical_theshold = $critical_thesholds_array[1];
-my $load_15_min_critical_theshold = $critical_thesholds_array[2];
+# Exit if backend not found in farm
+if ($backend_found eq 0) {
+	$p->nagios_exit( 
+		 return_code => CRITICAL, 
+		 message => "Zevenet ADC Load Balancer backend with ID '$backendid' not found in farm '$farmname'!" 
+	);
+}
+
+# my $critical_theshold = $p->opts->critical;
+# my $warning_theshold = $p->opts->warning;
 
 ###############################################################################
 # Perfdata methods
 #
 
 $p->add_perfdata( 
-  label => "Load 1 min",
-  value => $load_1_min,
-  uom => "Avg.",
-  warning   => $load_1_min_warning_theshold,
-  critical  => $load_1_min_critical_theshold,
+  label => "Backend Stablished connections",
+  uom => "Conns.",
+  value => $backend_established,
+  # warning   => $warning_theshold,
+  # critical  => $critical_theshold,
 );
 
 $p->add_perfdata( 
-  label => "Load 5 min",
-  value => $load_5_min,
-  uom => "Avg.",
-  warning   => $load_5_min_warning_theshold,
-  critical  => $load_5_min_critical_theshold,
-);
-
-$p->add_perfdata( 
-  label => "Load 15 min",
-  value => $load_15_min,
-  uom => "Avg.",
-  warning   => $load_15_min_warning_theshold,
-  critical  => $load_15_min_critical_theshold,
+  label => "Backend Pending connections",
+  uom => "Conns.",
+  value => $backend_pending,
+  # warning   => $warning_theshold,
+  # critical  => $critical_theshold,
 );
 
 
@@ -264,65 +309,48 @@ $p->add_perfdata(
 # Check the result against the defined warning and critical thresholds,
 # output the result and exit
 
-if ($load_1_min > $load_1_min_critical_theshold) {
-	
-	# Critical
-	$p->nagios_exit( 
-		 return_code => CRITICAL, 
-		 message => "Zevenet ADC Load Balancer 1 Min Load average is CRITICAL (Avg. 1 min load is $load_1_min)" 
+if ($backend_status eq "up") {
+
+	$backend_status = ucfirst($backend_status);
+
+	# Threshold methods
+	my $return_code = $p->check_threshold(
+	  check => $backend_established,
+	  warning => $p->opts->warning,
+	  critical => $p->opts->critical,
 	);
+	
+	#print Dumper($return_code);
+	#exit;
+	
+	if ($return_code ne 0) {
+	
+		# Exit
+		$p->nagios_exit( 
+			return_code => $return_code, 
+			message => "$backend_established stablished connections in backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' which is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
+		);
+	
+	
+	} else {
 
-} elsif ($load_1_min > $load_1_min_warning_theshold) {
+		# Exit
+		$p->nagios_exit( 
+			return_code => OK, 
+			message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
+		);
+	
+	}
 
-	# Warning
+
+} else {
+
+	# Exit
 	$p->nagios_exit( 
-		 return_code => WARNING, 
-		 message => "Zevenet ADC Load Balancer 1 Min Load average is WARNING (Avg. 1 min load is $load_1_min)" 
+		return_code => CRITICAL, 
+		message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
 	);
 
 }
 
-if ($load_5_min > $load_5_min_critical_theshold) {
-	
-	# Critical
-	$p->nagios_exit( 
-		 return_code => CRITICAL, 
-		 message => "Zevenet ADC Load Balancer 5 Min Load average is CRITICAL (Avg. 5 min load is $load_5_min)" 
-	);
-
-} elsif ($load_5_min > $load_5_min_warning_theshold) {
-
-	# Warning
-	$p->nagios_exit( 
-		 return_code => WARNING, 
-		 message => "Zevenet ADC Load Balancer 5 Min Load average is WARNING (Avg. 5 min load is $load_5_min)" 
-	);
-
-}
-
-
-if ($load_15_min > $load_15_min_critical_theshold) {
-	
-	# Critical
-	$p->nagios_exit( 
-		 return_code => CRITICAL, 
-		 message => "Zevenet ADC Load Balancer 15 Min Load average is CRITICAL (Avg. 15 min load is $load_15_min)" 
-	);
-
-} elsif ($load_15_min > $load_15_min_warning_theshold) {
-
-	# Warning
-	$p->nagios_exit( 
-		 return_code => WARNING, 
-		 message => "Zevenet ADC Load Balancer 15 Min Load average is WARNING (Avg. 15 min load is $load_15_min)" 
-	);
-
-}
-
-
-# Ok
-$p->nagios_exit( 
-	 return_code => OK, 
-	 message => "Zevenet ADC Load Balancer Load average is OK (Avg. load is $load_1_min/$load_5_min/$load_15_min)" 
-);
 

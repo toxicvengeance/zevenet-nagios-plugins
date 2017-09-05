@@ -8,6 +8,7 @@ Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer En
 | ---------------------------------- | ----------------- | ---------------------------------------------------------------------------|
 | check_zevenet_cpu.pl               | CPU usage         | Idle, iowait, irq, nice, softirq, system, usage, user and total CPU usage  |
 | check_zevenet_farm.pl              | Farm status       | Established and pending connections                                        | 
+| check_zevenet_farm_backend.pl      | Backend status    | Established and pending connections                                        | 
 | check_zevenet_interface.pl         | Interface status  | Traffic in and out                                                         |            
 | check_zevenet_memory.pl            | Memory usage      | Free, buffers, cached, used and total                                      |
 | check_zevenet_swap.pl              | Swap usage        | Free, cached, used and total                                               |

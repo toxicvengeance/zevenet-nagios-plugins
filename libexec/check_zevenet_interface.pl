@@ -318,6 +318,16 @@ $response_decoded = decode_json($response_body);
 #print  Dumper($response_decoded);
 #exit;
 
+# Wrong ZAPI key
+if (defined $response_decoded->{'message'}) {
+	if ($response_decoded->{'message'} eq 'Authorization required' ) {
+		$p->nagios_exit( 
+			 return_code => CRITICAL, 
+			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+		);
+	}
+}
+
 my $interface_name = $p->opts->name;
 my $interface_type;
 my $interface_status;

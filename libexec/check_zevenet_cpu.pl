@@ -212,6 +212,16 @@ $response_decoded = decode_json($response_body);
 #print  Dumper($response_decoded);
 #exit;
 
+# Wrong ZAPI key
+if (defined $response_decoded->{'message'}) {
+	if ($response_decoded->{'message'} eq 'Authorization required' ) {
+		$p->nagios_exit( 
+			 return_code => CRITICAL, 
+			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+		);
+	}
+}
+
 my $idle_cpu = $response_decoded->{'params'}->{'idle'};
 my $iowait_cpu = $response_decoded->{'params'}->{'iowait'};
 my $irq_cpu = $response_decoded->{'params'}->{'irq'};
@@ -309,6 +319,6 @@ my $code = $p->check_threshold(
 # Exit
 $p->nagios_exit( 
 	 return_code => $code, 
-	 message => "Zevenet ADC Load Balancer CPU usage is $usage_cpu % (Idle $idle_cpu %)" 
+	 message => "Zevenet ADC Load Balancer CPU usage is $usage_cpu % ($idle_cpu % idle)" 
 );
 
