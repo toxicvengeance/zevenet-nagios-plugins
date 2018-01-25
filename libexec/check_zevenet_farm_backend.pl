@@ -249,7 +249,7 @@ if (defined $response_decoded->{'message'}) {
 	if ($response_decoded->{'message'} eq 'Authorization required' ) {
 		$p->nagios_exit( 
 			 return_code => CRITICAL, 
-			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+			 message => "Authorization required, please specify a correct ZAPI v3 key!" 
 		);
 	}
 }
@@ -281,27 +281,27 @@ if ($backend_found eq 0) {
 	);
 }
 
-# my $critical_theshold = $p->opts->critical;
-# my $warning_theshold = $p->opts->warning;
+# my $critical_threshold = $p->opts->critical;
+# my $warning_threshold = $p->opts->warning;
 
 ###############################################################################
 # Perfdata methods
 #
 
 $p->add_perfdata( 
-  label => "Backend Stablished connections",
+  label => "Backend established connections",
   uom => "Conns.",
   value => $backend_established,
-  # warning   => $warning_theshold,
-  # critical  => $critical_theshold,
+  # warning   => $warning_threshold,
+  # critical  => $critical_threshold,
 );
 
 $p->add_perfdata( 
-  label => "Backend Pending connections",
+  label => "Backend pending connections",
   uom => "Conns.",
   value => $backend_pending,
-  # warning   => $warning_theshold,
-  # critical  => $critical_theshold,
+  # warning   => $warning_threshold,
+  # critical  => $critical_threshold,
 );
 
 
@@ -328,7 +328,7 @@ if ($backend_status eq "up") {
 		# Exit
 		$p->nagios_exit( 
 			return_code => $return_code, 
-			message => "$backend_established stablished connections in backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' which is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
+			message => "$backend_established established connections in backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' which is in '$backend_status' state (established connections: $backend_established / pending connections: $backend_pending)" 
 		);
 	
 	
@@ -337,7 +337,7 @@ if ($backend_status eq "up") {
 		# Exit
 		$p->nagios_exit( 
 			return_code => OK, 
-			message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
+			message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (established connections: $backend_established / pending connections: $backend_pending)" 
 		);
 	
 	}
@@ -348,7 +348,7 @@ if ($backend_status eq "up") {
 	# Exit
 	$p->nagios_exit( 
 		return_code => CRITICAL, 
-		message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (Stablished connections: $backend_established / Pending connections: $backend_pending)" 
+		message => "Backend with ID '$backendid' and IP address '$backend_ip' in farm '$farmname' is in '$backend_status' state (established connections: $backend_established / pending connections: $backend_pending)" 
 	);
 
 }

@@ -216,7 +216,7 @@ if (defined $response_decoded->{'message'}) {
 	if ($response_decoded->{'message'} eq 'Authorization required' ) {
 		$p->nagios_exit( 
 			 return_code => CRITICAL, 
-			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+			 message => "Authorization required, please specify a correct ZAPI v3 key!" 
 		);
 	}
 }
@@ -228,14 +228,14 @@ my $used_swap = $response_decoded->{'params'}->{'SwapUsed'};
 
 my $free_swap_percentage = ($free_swap/ $total_swap) * 100;
 
-my $critical_theshold = $p->opts->critical;
-my $warning_theshold = $p->opts->warning;
+my $critical_threshold = $p->opts->critical;
+my $warning_threshold = $p->opts->warning;
 
-$critical_theshold =~ s/\://;
-$warning_theshold =~ s/\://;
+$critical_threshold =~ s/\://;
+$warning_threshold =~ s/\://;
 
-my $critical_theshold_mb = ($critical_theshold * $total_swap) / 100;
-my $warning_theshold_mb = ($warning_theshold * $total_swap) / 100;
+my $critical_threshold_mb = ($critical_threshold * $total_swap) / 100;
+my $warning_threshold_mb = ($warning_threshold * $total_swap) / 100;
 
 my $free_swap_percentage_string = sprintf("%.2f", ($free_swap / $total_swap) * 100);
 
@@ -248,8 +248,8 @@ $p->add_perfdata(
   label => "Free",
   value => $free_swap,
   uom => "Mb",
-  warning   => $warning_theshold_mb,
-  critical  => $critical_theshold_mb,
+  warning   => $warning_threshold_mb,
+  critical  => $critical_threshold_mb,
 );
 
 $p->add_perfdata( 
@@ -287,4 +287,3 @@ $p->nagios_exit(
 	 return_code => $code, 
 	 message => "Zevenet ADC Load Balancer free swap space is $free_swap_percentage_string % (Free $free_swap Mb / Total: $total_swap Mb)" 
 );
-

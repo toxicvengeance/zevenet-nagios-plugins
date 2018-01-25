@@ -206,18 +206,18 @@ if (defined $response_decoded->{'message'}) {
 	if ($response_decoded->{'message'} eq 'Authorization required' ) {
 		$p->nagios_exit( 
 			 return_code => CRITICAL, 
-			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+			 message => "Authorization required, please specify a correct ZAPI v3 key!" 
 		);
 	}
 }
 
 my $total_connections = $response_decoded->{'params'}->{'connections'};
 
-my $critical_theshold = $p->opts->critical;
-my $warning_theshold = $p->opts->warning;
+my $critical_threshold = $p->opts->critical;
+my $warning_threshold = $p->opts->warning;
 
-$critical_theshold =~ s/\://;
-$warning_theshold =~ s/\://;
+$critical_threshold =~ s/\://;
+$warning_threshold =~ s/\://;
 
 
 
@@ -230,8 +230,8 @@ $p->add_perfdata(
   label => "Total connections",
   value => $total_connections,
   uom => "Conns.",
-  warning   => $warning_theshold,
-  critical  => $critical_theshold,
+  warning   => $warning_threshold,
+  critical  => $critical_threshold,
 );
 
 ###############################################################################
@@ -250,4 +250,3 @@ $p->nagios_exit(
 	 return_code => $code, 
 	 message => "Zevenet ADC Load Balancer: $total_connections total tracked connections" 
 );
-

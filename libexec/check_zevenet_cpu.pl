@@ -236,11 +236,11 @@ my $total_cpu = $idle_cpu + $iowait_cpu + $irq_cpu + $nice_cpu + $softirq_cpu + 
 
 
 
-my $critical_theshold = $p->opts->critical;
-my $warning_theshold = $p->opts->warning;
+my $critical_threshold = $p->opts->critical;
+my $warning_threshold = $p->opts->warning;
 
-$critical_theshold =~ s/\://;
-$warning_theshold =~ s/\://;
+$critical_threshold =~ s/\://;
+$warning_threshold =~ s/\://;
 
 
 
@@ -253,8 +253,8 @@ $p->add_perfdata(
   label => "Idle",
   value => $idle_cpu,
   uom => "%",
-  warning   => $warning_theshold,
-  critical  => $critical_theshold,
+  warning   => $warning_threshold,
+  critical  => $critical_threshold,
 );
 
 $p->add_perfdata( 
@@ -321,4 +321,3 @@ $p->nagios_exit(
 	 return_code => $code, 
 	 message => "Zevenet ADC Load Balancer CPU usage is $usage_cpu % ($idle_cpu % idle)" 
 );
-

@@ -256,14 +256,14 @@ if (defined $response_decoded->{'message'}) {
 	if ($response_decoded->{'message'} eq 'Authorization required' ) {
 		$p->nagios_exit( 
 			 return_code => CRITICAL, 
-			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+			 message => "Authorization required, please specify a correct ZAPI v3 key!" 
 		);
 	}
 }
 
 my $farm_found = 0;
 my $farm = "";
-my $farm_stablished = "";
+my $farm_established = "";
 my $farm_pending = "";
 my $farm_profile = "";
 my $farm_status = "";
@@ -276,7 +276,7 @@ foreach $farm (@$farms) {
 	#print "Farm: " . $farm->{'farmname'} . "\n";
 	if ($farm->{'farmname'} eq $farmname ) {
 		$farm_found = 1;
-		$farm_stablished = $farm->{'established'};
+		$farm_established = $farm->{'established'};
 		$farm_pending = $farm->{'pending'};
 		$farm_profile = $farm->{'profile'};
 		$farm_status = $farm->{'status'};
@@ -293,8 +293,8 @@ if ($farm_found eq 0) {
 	);
 }
 
-# my $critical_theshold = $p->opts->critical;
-# my $warning_theshold = $p->opts->warning;
+# my $critical_threshold = $p->opts->critical;
+# my $warning_threshold = $p->opts->warning;
 
 ###############################################################################
 # Perfdata methods
@@ -303,17 +303,17 @@ if ($farm_found eq 0) {
 $p->add_perfdata( 
   label => "Stablished connections",
   uom => "Conns.",
-  value => $farm_stablished,
-  # warning   => $warning_theshold,
-  # critical  => $critical_theshold,
+  value => $farm_established,
+  # warning   => $warning_threshold,
+  # critical  => $critical_threshold,
 );
 
 $p->add_perfdata( 
   label => "Pending connections",
   uom => "Conns.",
   value => $farm_pending,
-  # warning   => $warning_theshold,
-  # critical  => $critical_theshold,
+  # warning   => $warning_threshold,
+  # critical  => $critical_threshold,
 );
 
 
@@ -326,7 +326,7 @@ if ($farm_status eq "up") {
 	# Exit
 	$p->nagios_exit( 
 		return_code => OK, 
-		message => "Zevenet ADC Load Balancer $farm_profile farm '$farmname' listen at $farm_vip:$farm_vport is $farm_status (Stablished connections: $farm_stablished / Pending connections: $farm_pending)" 
+		message => "Zevenet ADC Load Balancer $farm_profile farm '$farmname' listen at $farm_vip:$farm_vport is $farm_status (established connections: $farm_established / pending connections: $farm_pending)" 
 	);
 
 
@@ -335,9 +335,7 @@ if ($farm_status eq "up") {
 	# Exit
 	$p->nagios_exit( 
 		return_code => CRITICAL, 
-		message => "Zevenet ADC Load Balancer $farm_profile farm '$farmname' listen at $farm_vip:$farm_vport is $farm_status (Stablished connections: $farm_stablished / Pending connections: $farm_pending)"  
+		message => "Zevenet ADC Load Balancer $farm_profile farm '$farmname' listen at $farm_vip:$farm_vport is $farm_status (established connections: $farm_established / pending connections: $farm_pending)"  
 	);
 
 }
-
-

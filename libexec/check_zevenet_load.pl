@@ -107,7 +107,7 @@ $p->add_arg(
 	spec => 'warning|w=s',
 	help => 
 qq{-w, --warning=INTEGER,INTEGER,INTEGER
-   Warning thesholds for 1, 5 and 15 min load averages.},
+   Warning thresholds for 1, 5 and 15 min load averages.},
 	required => 1,
 #	default => 10,
 );
@@ -117,7 +117,7 @@ $p->add_arg(
 	spec => 'critical|c=s',
 	help => 
 qq{-w, --critical=INTEGER,INTEGER,INTEGER
-   Critical thesholds for 1, 5 and 15 min load averages.},
+   Critical thresholds for 1, 5 and 15 min load averages.},
 );
 
 # Timeout value
@@ -209,7 +209,7 @@ if (defined $response_decoded->{'message'}) {
 	if ($response_decoded->{'message'} eq 'Authorization required' ) {
 		$p->nagios_exit( 
 			 return_code => CRITICAL, 
-			 message => "Authorization required, please especify a correct ZAPI v3 key!" 
+			 message => "Authorization required, please specify a correct ZAPI v3 key!" 
 		);
 	}
 }
@@ -219,17 +219,17 @@ my $load_5_min = $response_decoded->{'params'}->{'Last_5'};
 my $load_15_min = $response_decoded->{'params'}->{'Last_15'};
 
 
-my $warning_thesholds = $p->opts->warning;
-my @warning_thesholds_array = split(/,/, $warning_thesholds);
-my $load_1_min_warning_theshold = $warning_thesholds_array[0];
-my $load_5_min_warning_theshold = $warning_thesholds_array[1];
-my $load_15_min_warning_theshold = $warning_thesholds_array[2];
+my $warning_thresholds = $p->opts->warning;
+my @warning_thresholds_array = split(/,/, $warning_thresholds);
+my $load_1_min_warning_threshold = $warning_thresholds_array[0];
+my $load_5_min_warning_threshold = $warning_thresholds_array[1];
+my $load_15_min_warning_threshold = $warning_thresholds_array[2];
 
-my $critical_thesholds = $p->opts->critical;
-my @critical_thesholds_array = split(/,/, $critical_thesholds);
-my $load_1_min_critical_theshold = $critical_thesholds_array[0];
-my $load_5_min_critical_theshold = $critical_thesholds_array[1];
-my $load_15_min_critical_theshold = $critical_thesholds_array[2];
+my $critical_thresholds = $p->opts->critical;
+my @critical_thresholds_array = split(/,/, $critical_thresholds);
+my $load_1_min_critical_threshold = $critical_thresholds_array[0];
+my $load_5_min_critical_threshold = $critical_thresholds_array[1];
+my $load_15_min_critical_threshold = $critical_thresholds_array[2];
 
 ###############################################################################
 # Perfdata methods
@@ -239,24 +239,24 @@ $p->add_perfdata(
   label => "Load 1 min",
   value => $load_1_min,
   uom => "Avg.",
-  warning   => $load_1_min_warning_theshold,
-  critical  => $load_1_min_critical_theshold,
+  warning   => $load_1_min_warning_threshold,
+  critical  => $load_1_min_critical_threshold,
 );
 
 $p->add_perfdata( 
   label => "Load 5 min",
   value => $load_5_min,
   uom => "Avg.",
-  warning   => $load_5_min_warning_theshold,
-  critical  => $load_5_min_critical_theshold,
+  warning   => $load_5_min_warning_threshold,
+  critical  => $load_5_min_critical_threshold,
 );
 
 $p->add_perfdata( 
   label => "Load 15 min",
   value => $load_15_min,
   uom => "Avg.",
-  warning   => $load_15_min_warning_theshold,
-  critical  => $load_15_min_critical_theshold,
+  warning   => $load_15_min_warning_threshold,
+  critical  => $load_15_min_critical_threshold,
 );
 
 
@@ -264,7 +264,7 @@ $p->add_perfdata(
 # Check the result against the defined warning and critical thresholds,
 # output the result and exit
 
-if ($load_1_min > $load_1_min_critical_theshold) {
+if ($load_1_min > $load_1_min_critical_threshold) {
 	
 	# Critical
 	$p->nagios_exit( 
@@ -272,7 +272,7 @@ if ($load_1_min > $load_1_min_critical_theshold) {
 		 message => "Zevenet ADC Load Balancer 1 Min Load average is CRITICAL (Avg. 1 min load is $load_1_min)" 
 	);
 
-} elsif ($load_1_min > $load_1_min_warning_theshold) {
+} elsif ($load_1_min > $load_1_min_warning_threshold) {
 
 	# Warning
 	$p->nagios_exit( 
@@ -282,7 +282,7 @@ if ($load_1_min > $load_1_min_critical_theshold) {
 
 }
 
-if ($load_5_min > $load_5_min_critical_theshold) {
+if ($load_5_min > $load_5_min_critical_threshold) {
 	
 	# Critical
 	$p->nagios_exit( 
@@ -290,7 +290,7 @@ if ($load_5_min > $load_5_min_critical_theshold) {
 		 message => "Zevenet ADC Load Balancer 5 Min Load average is CRITICAL (Avg. 5 min load is $load_5_min)" 
 	);
 
-} elsif ($load_5_min > $load_5_min_warning_theshold) {
+} elsif ($load_5_min > $load_5_min_warning_threshold) {
 
 	# Warning
 	$p->nagios_exit( 
@@ -301,7 +301,7 @@ if ($load_5_min > $load_5_min_critical_theshold) {
 }
 
 
-if ($load_15_min > $load_15_min_critical_theshold) {
+if ($load_15_min > $load_15_min_critical_threshold) {
 	
 	# Critical
 	$p->nagios_exit( 
@@ -309,7 +309,7 @@ if ($load_15_min > $load_15_min_critical_theshold) {
 		 message => "Zevenet ADC Load Balancer 15 Min Load average is CRITICAL (Avg. 15 min load is $load_15_min)" 
 	);
 
-} elsif ($load_15_min > $load_15_min_warning_theshold) {
+} elsif ($load_15_min > $load_15_min_warning_threshold) {
 
 	# Warning
 	$p->nagios_exit( 
@@ -325,4 +325,3 @@ $p->nagios_exit(
 	 return_code => OK, 
 	 message => "Zevenet ADC Load Balancer Load average is OK (Avg. load is $load_1_min/$load_5_min/$load_15_min)" 
 );
-
