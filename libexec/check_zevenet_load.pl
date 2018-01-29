@@ -53,7 +53,7 @@ use warnings;
 use WWW::Curl::Easy;
 use JSON;
 use Data::Dumper;
-use Nagios::Plugin;
+use Monitoring::Plugin;
 
 use vars qw($VERSION $PROGNAME  $verbose $warn $critical $timeout $result);
 $VERSION = '1.0';
@@ -69,8 +69,8 @@ $PROGNAME = basename($0);
 #   https://nagios-plugins.org/doc/guidelines.html#PLUGOPTIONS
 
 
-# Instantiate Nagios::Plugin object (the 'usage' parameter is mandatory)
-my $p = Nagios::Plugin->new(
+# Instantiate Monitoring::Plugin object (the 'usage' parameter is mandatory)
+my $p = Monitoring::Plugin->new(
     usage => "Usage: %s [ -v|--verbose ]  [-H <host>] [-t <timeout>]
 	[ -z|--zapikey=<Zevenet API v3 ZAPI_KEY> ]
 	[ -w|--warning=<WLOAD1>,<WLOAD5>,<WLOAD15> ]
