@@ -22,6 +22,10 @@ Nagios (https://www.nagios.org) is a enterprise-class Open Source IT monitoring,
 Plugins provide performace data, so yo can use PNP4Nagios (https://docs.pnp4nagios.org/) or similar tool to make graphs from 
 collected metrics.
 
+Further information about how to use this package in the following article:
+https://www.zevenet.com/knowledge-base/howtos/monitoring-zevenet-nagios/
+
+
 ## INSTALLATION
 
 Zevenet Nagios Plugins are developed to be installed in your Nagios (Or Nagios plugin's compatible) monitoring server. So please access via SSH to
