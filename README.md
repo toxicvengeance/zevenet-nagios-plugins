@@ -1,6 +1,6 @@
 # Zevenet Nagios Plugins
 
-Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer Enterprise Edition system health and performance.
+Nagios plugin collection written in Perl to monitor Zevenet ADC Load Balancer Enterprise Edition system health check and performance.
 
 
 
@@ -22,7 +22,6 @@ Nagios (https://www.nagios.org) is a enterprise-class Open Source IT monitoring,
 Plugins provide performace data, so yo can use PNP4Nagios (https://docs.pnp4nagios.org/) or similar tool to make graphs from 
 collected metrics.
 
-
 ## INSTALLATION
 
 Zevenet Nagios Plugins are developed to be installed in your Nagios (Or Nagios plugin's compatible) monitoring server. So please access via SSH to
@@ -35,7 +34,7 @@ Install required perl modules:
 #### Debian Jessie:
 
 ```
-apt-get update && apt-get install libwww-curl-perl libjson-perl libnagios-plugin-perl
+apt-get update && apt-get install libwww-curl-perl libjson-perl libmonitoring-plugin-perl
 ```
 
 If Perl modules doesn't exist in your distribution package manager, you can install manually:
@@ -45,7 +44,7 @@ If Perl modules doesn't exist in your distribution package manager, you can inst
 ```
 perl -MCPAN -e 'install WWW::Curl'
 perl -MCPAN -e 'install JSON'
-perl -MCPAN -e 'install Nagios::Plugin'  
+perl -MCPAN -e 'install Monitoring::Plugin'  
 ```
 
 
