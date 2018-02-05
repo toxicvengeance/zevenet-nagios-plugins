@@ -302,7 +302,6 @@ if ($farm_found eq 0) {
 
 $p->add_perfdata( 
   label => "Stablished connections",
-  uom => "Conns.",
   value => $farm_established,
   # warning   => $warning_threshold,
   # critical  => $critical_threshold,
@@ -310,7 +309,6 @@ $p->add_perfdata(
 
 $p->add_perfdata( 
   label => "Pending connections",
-  uom => "Conns.",
   value => $farm_pending,
   # warning   => $warning_threshold,
   # critical  => $critical_threshold,

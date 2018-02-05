@@ -246,7 +246,7 @@ my $free_memory_percentage_string = sprintf("%.2f", ($free_memory/ $total_memory
 $p->add_perfdata( 
   label => "Free",
   value => $free_memory,
-  uom => "Mb",
+  uom => "MB",
   warning   => $warning_threshold_mb,
   critical  => $critical_threshold_mb,
 );
@@ -254,25 +254,25 @@ $p->add_perfdata(
 $p->add_perfdata( 
   label => "Buffers",
   value => $buffers_memory,
-  uom => "Mb"
+  uom => "MB"
 );
 
 $p->add_perfdata( 
   label => "Cached",
   value => $cached_memory,
-  uom => "Mb"
+  uom => "MB"
 );
 
 $p->add_perfdata( 
   label => "Used",
   value => $used_memory,
-  uom => "Mb"
+  uom => "MB"
 );
 
 $p->add_perfdata( 
   label => "Total",
   value => $total_memory,
-  uom => "Mb",
+  uom => "MB",
 );
 
 

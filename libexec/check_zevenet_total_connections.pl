@@ -229,7 +229,6 @@ $warning_threshold =~ s/\://;
 $p->add_perfdata( 
   label => "Total connections",
   value => $total_connections,
-  uom => "Conns.",
   warning   => $warning_threshold,
   critical  => $critical_threshold,
 );

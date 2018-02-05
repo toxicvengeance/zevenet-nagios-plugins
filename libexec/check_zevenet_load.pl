@@ -238,7 +238,6 @@ my $load_15_min_critical_threshold = $critical_thresholds_array[2];
 $p->add_perfdata( 
   label => "Load 1 min",
   value => $load_1_min,
-  uom => "Avg.",
   warning   => $load_1_min_warning_threshold,
   critical  => $load_1_min_critical_threshold,
 );
@@ -246,7 +245,6 @@ $p->add_perfdata(
 $p->add_perfdata( 
   label => "Load 5 min",
   value => $load_5_min,
-  uom => "Avg.",
   warning   => $load_5_min_warning_threshold,
   critical  => $load_5_min_critical_threshold,
 );
@@ -254,7 +252,6 @@ $p->add_perfdata(
 $p->add_perfdata( 
   label => "Load 15 min",
   value => $load_15_min,
-  uom => "Avg.",
   warning   => $load_15_min_warning_threshold,
   critical  => $load_15_min_critical_threshold,
 );

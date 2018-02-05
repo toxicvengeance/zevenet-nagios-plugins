@@ -368,13 +368,11 @@ foreach $interface (@$bond_interface_list) {
 $p->add_perfdata( 
   label => "Traffic in",
   value => $interface_in,
-  uom => "Mbps"
 );
 
 $p->add_perfdata( 
   label => "Traffic out",
   value => $interface_out,
-  uom => "Mbps"
 );
 
 ###############################################################################
